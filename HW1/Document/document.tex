@@ -1,0 +1,235 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{xepersian}
+\settextfont{B Nazanin} 
+
+
+\title{تمرین اول \lr{–} بینایی ماشین \\ \large}
+\author{دانشجو: سایین اعلا \\ استاد: دکتر حانیه نادرید \\ شماره دانشجویی : 159404002 }
+\date{نیمسال اول ۱۴۰۵\lr{-}۱۴۰۴}
+
+\begin{document}
+	
+	\maketitle
+	\section{سوال اول: \lr{Bit-Plane Effects in Image Enhancements}}
+
+	\subsection{بخش ۱: استخراج و تحلیل صفحات بیت (\lr{plane Extraction})}
+	
+	\subsubsection{استخراج بیت‌پلین‌ها}
+	برای هر تصویر خاکستری، بیت‌پلین‌های $B_0$ تا $B_7$ استخراج شدند.  
+	هر بیت‌پلین نشان‌دهنده‌ی مقدار یک بیت مشخص از شدت روشنایی پیکسل‌ها است.  
+	بیت $B_7$ بیشترین ارزش (\lr{MSB}) و بیت $B_0$ کمترین ارزش (\lr{LSB}) را دارد.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Image/Cameraman_bitplanes.png}
+		\caption{\lr{Bit-planes} تصویر طبیعی \lr{Cameraman}}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Image/Synthetic_bitplanes.png}
+		\caption{\lr{Bit-planes} تصویر مصنوعی \lr{Sinusoidal Synthetic}}
+	\end{figure}
+	
+	\subsubsection{هیستوگرام بیت‌پلین‌ها}
+	هیستوگرام بیت‌های $B_0, B_3, B_5, B_7$ برای هر تصویر رسم شد:
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Image/Cameraman_hist.png}
+		\caption{هیستوگرام بیت‌پلین‌ها برای تصویر طبیعی \lr{Cameraman}}
+	\end{figure}
+		
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Image/Synthetic_hist.png}
+		\caption{هیستوگرام بیت‌پلین‌ها برای تصویر مصنوعی \lr{Sinusoidal Synthetic}}
+	\end{figure}
+	
+	\subsubsection{تحلیل و مقایسه‌ی بیت‌پلین‌ها}
+	\begin{itemize}
+		\item بیت‌های بالاتر مانند $B_7$ و $B_6$ ساختار کلی و اطلاعات اصلی تصویر را حفظ می‌کنند، در حالی که بیت‌های پایین‌تر مانند $B_0$ و $B_1$ بیشتر شامل جزئیات ریز و نویز هستند.
+		\item در تصاویر طبیعی، الگوی بیت‌ها نامنظم‌تر و پیچیده‌تر است، زیرا شدت روشنایی در پیکسل‌ها تنوع بیشتری دارد.  
+		در مقابل، در تصاویر مصنوعی (مانند تصویر سینوسی)، بیت‌ها ساختاری منظم و تکرارشونده دارند.
+		\item مشاهده‌ی هیستوگرام‌ها نشان می‌دهد که توزیع شدت در تصویر طبیعی غیریکنواخت است، در حالی که در تصویر مصنوعی، به دلیل ماهیت سینوسی، توزیع منظم‌تر و متقارن‌تر است.
+		\item بنابراین، بررسی بیت‌پلین‌ها و هیستوگرام‌ها می‌تواند برای تشخیص تفاوت بین تصاویر طبیعی و مصنوعی مفید باشد.
+	\end{itemize}
+	
+	\subsection{بخش ۲: بازسازی تصویر و تحلیل حساسیت بیت‌پلین‌ها}
+	
+	\subsubsection{بازسازی تصویر با بیت‌های منتخب}
+	دو نوع بازسازی انجام شد:
+	\begin{enumerate}
+		\item بازسازی با بیت‌های بالا: $S = \{7,6,5\}$
+		\item بازسازی با بیت‌های پایین: $S = \{0,1,2\}$
+	\end{enumerate}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.45\textwidth]{Image/recon_high.png}
+		\includegraphics[width=0.45\textwidth]{Image/recon_low.png}
+		\caption{بازسازی تصویر با بیت‌های بالا (چپ) و پایین (راست)}
+	\end{figure}
+	
+	\subsubsection{محاسبات \lr{MSE}، \lr{PSNR} و \lr{Entropy}}
+	نتایج برای تصویر طبیعی و مصنوعی به ترتیب در جدول‌های زیر آمده است:
+	
+	\begin{table}[H]
+		\centering
+		\caption{نتایج برای تصویر طبیعی \lr{Cameraman}}
+		\begin{tabular}{c|c|c|c|c|c}
+			\hline
+			$k$ & \lr{MSE} & \lr{PSNR (dB)} & \lr{Entropy} & \lr{PSNR\_flip} & \lr{Entropy\_flip} \\ 
+			\hline
+			1 & 2938.42 & 13.45 & 0.93 & 10.23 & 0.97 \\
+			2 & 710.13 & 19.62 & 1.80 & 12.31 & 1.92 \\
+			3 & 348.07 & 22.71 & 2.46 & 12.71 & 2.80 \\
+			4 & 78.47 & 29.18 & 3.31 & 12.91 & 3.77 \\
+			5 & 17.79 & 35.63 & 4.21 & 12.96 & 4.75 \\
+			6 & 3.44 & 42.77 & 5.16 & 12.98 & 5.75 \\
+			7 & 0.50 & 51.15 & 6.14 & 12.98 & 6.74 \\
+			8 & 0.00 & $\infty$ & 7.13 & 13.00 & 7.74 \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	\begin{table}[H]
+		\centering
+		\caption{نتایج برای تصویر مصنوعی \lr{Sinusoidal Synthetic}}
+		\begin{tabular}{c|c|c|c|c|c}
+			\hline
+			$k$ & \lr{MSE} & \lr{PSNR (dB)} & \lr{Entropy} & \lr{PSNR\_flip} & \lr{Entropy\_flip} \\ 
+			\hline
+			1 & 6254.01 & 10.17 & 1.00 & 8.50 & 1.00 \\
+			2 & 1475.25 & 16.44 & 1.89 & 11.18 & 1.97 \\
+			3 & 329.87 & 22.95 & 2.83 & 12.25 & 2.96 \\
+			4 & 81.19 & 29.04 & 3.59 & 12.54 & 3.94 \\
+			5 & 20.84 & 34.94 & 3.89 & 12.66 & 4.88 \\
+			6 & 3.17 & 43.12 & 3.98 & 12.67 & 5.77 \\
+			7 & 0.46 & 51.51 & 4.06 & 12.69 & 6.66 \\
+			8 & 0.00 & $\infty$ & 4.12 & 12.67 & 7.50 \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.45\textwidth]{Image/PSNR_vs_k.png}
+		\includegraphics[width=0.45\textwidth]{Image/Entropy_vs_k.png}
+		\caption{تغییر \lr{PSNR} و \lr{Entropy} بر حسب تعداد بیت‌ها پس از flip}
+	\end{figure}
+	
+	\subsubsection{تحلیل نتایج عددی}
+	\begin{itemize}
+		\item با افزایش تعداد بیت‌های مورد استفاده، مقادیر \lr{PSNR} و \lr{Entropy} افزایش می‌یابند که نشان‌دهنده‌ی افزایش کیفیت بازسازی است.
+		\item بیت‌های بالایی (\lr{MSB}ها) بیشترین تأثیر را در کیفیت تصویر دارند، زیرا وزن عددی بالاتری در بازسازی دارند.
+		\item بیت‌های پایین‌تر (\lr{LSB}ها) در بازسازی نقش جزئی دارند و بیشتر به نویز و جزئیات مربوط می‌شوند.
+		\item در آزمایش \lr{flip}، مشاهده می‌شود که \lr{MSBها} حساس‌تر هستند و تغییر در آن‌ها باعث افت قابل توجه \lr{PSNR} می‌شود.
+		\item در تصویر مصنوعی، به‌دلیل ساختار منظم‌تر، تغییرات \lr{PSNR} و \lr{Entropy} نسبت به تصویر طبیعی کمتر است.
+		\item در تصویر طبیعی، بیت‌های بالا بیشترین سهم در بازسازی و درک ساختار اصلی تصویر را دارند.
+	\end{itemize}
+	
+	\subsection{جمع‌بندی نهایی}
+	نتایج این آزمایش نشان می‌دهد که:
+	\begin{enumerate}
+		\item بیت‌های بالایی حامل اطلاعات اصلی تصویر هستند و حذف آن‌ها منجر به افت شدید کیفیت می‌شود.
+		\item بیت‌های پایین‌تر عمدتاً شامل جزئیات ریز و نویز هستند.
+		\item با افزایش تعداد بیت‌های مورد استفاده، \lr{PSNR} و \lr{Entropy} افزایش یافته و تصویر بازسازی‌شده به نسخه اصلی نزدیک‌تر می‌شود.
+		\item تصاویر مصنوعی به دلیل توزیع منظم‌تر بیت‌ها، رفتار پایدارتر و تغییرات کمتری نسبت به \lr{flip} دارند.
+		\item بررسی بیت‌پلین‌ها ابزار مفیدی برای تحلیل ویژگی‌های آماری و ساختاری تصاویر در بینایی ماشین محسوب می‌شود.
+	\end{enumerate}
+	
+	\section{سوال ۲: \lr{Adaptive Histogram Equalization}}
+	
+	\subsubsection{توضیح مسئله}
+	در این بخش، تصویر خاکستری \lr{Couple.tiff} با ابعاد $512 \times 512$ مورد استفاده قرار گرفت تا اثر روش‌های مختلف \lr{Adaptive Histogram Equalization} بر بهبود کنتراست تصویر بررسی شود.  
+	دو روش پیاده‌سازی شد:
+	\begin{enumerate}
+		\item روش \lr{Tiling Approach}: تقسیم تصویر به بلوک‌های هم‌اندازه و اعمال \lr{Histogram Equalization} محلی برای هر بلوک.
+		\item روش \lr{Sliding Window Approach}: استفاده از پنجره متحرک برای هر پیکسل و اعمال \lr{Histogram Equalization} محلی.
+	\end{enumerate}
+	
+	اندازه بلوک‌ها/پنجره‌ها برای هر دو روش برابر با \{64, 32, 16\} انتخاب شد.
+	
+	\subsubsection{نتایج روش \lr{Tiling}}
+	\begin{itemize}
+		\item تصاویر حاصل از \lr{Tiling AHE} با اندازه بلوک‌های مختلف نمایش داده شده‌اند.
+	\end{itemize}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.45\textwidth]{Image/Tiling_64.png}
+		\includegraphics[width=0.45\textwidth]{Image/Tiling_32.png}
+		\caption{نتیجه \lr{Tiling AHE} با بلوک‌های $64 \times 64$ (چپ) و $32 \times 32$ (راست)}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.45\textwidth]{Image/Tiling_16.png}
+		\caption{نتیجه \lr{Tiling AHE} با بلوک $16 \times 16$}
+	\end{figure}
+
+	\subsubsection{نتایج روش \lr{Sliding Window}}
+	\begin{itemize}
+		\item تصاویر حاصل از \lr{Sliding Window AHE} با اندازه پنجره‌های مختلف نمایش داده شده‌اند.
+	\end{itemize}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.45\textwidth]{Image/Sliding_64.png}
+		\includegraphics[width=0.45\textwidth]{Image/Sliding_32.png}
+		\caption{نتیجه \lr{Sliding Window AHE} با پنجره‌های $64 \times 64$ (چپ) و $32 \times 32$ (راست)}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.45\textwidth]{Image/Sliding_16.png}
+		\caption{نتیجه \lr{Sliding Window AHE} با پنجره $16 \times 16$}
+	\end{figure}
+	
+	\subsubsection{تحلیل عددی}
+	\begin{itemize}
+		\item برای هر تصویر خروجی، \lr{Entropy} و \lr{PSNR} محاسبه و با تصویر اصلی مقایسه شد.
+		\item نمودار تغییرات \lr{Entropy} بر حسب اندازه بلوک/پنجره برای دو روش رسم شد.
+	\end{itemize}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\textwidth]{Image/Entropy_vs_window.png}
+		\caption{تغییرات \lr{Entropy} بر حسب اندازه بلوک/پنجره برای روش‌های \lr{Tiling} و \lr{Sliding}}
+	\end{figure}
+	
+	\begin{itemize}
+		\item نمودار تغییرات \lr{PSNR} بر حسب اندازه بلوک/پنجره برای دو روش رسم شد.
+	\end{itemize}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\textwidth]{Image/PSNR_vs_window.png}
+		\caption{تغییرات \lr{PSNR} بر حسب اندازه بلوک/پنجره برای روش‌های \lr{Tiling} و \lr{Sliding}}
+	\end{figure}
+
+	\subsubsection{تحلیل و مقایسه}
+	\begin{itemize}
+		\item روش \lr{Tiling} برای بلوک‌های بزرگ، کنتراست کلی تصویر را بهبود می‌دهد ولی جزئیات محلی را کمتر نمایش می‌دهد.
+		\item روش \lr{Sliding Window} با پنجره‌های کوچک، جزئیات محلی را بهتر حفظ می‌کند و \lr{Entropy} بالاتری دارد.
+		\item کاهش اندازه بلوک یا پنجره باعث افزایش \lr{Entropy} و کاهش \lr{PSNR} نسبت به تصویر اصلی می‌شود، زیرا تغییرات محلی بیشتر اعمال می‌شوند.
+		\item مقایسه بصری نشان می‌دهد که برای تصاویر با جزئیات محلی زیاد، روش \lr{Sliding Window} با پنجره کوچک بهترین نتیجه بصری و آماری را ارائه می‌دهد.
+	\end{itemize}
+	
+	\subsubsection{جمع‌بندی}
+	\begin{enumerate}
+    \item هر دو روش \lr{Adaptive Histogram Equalization}، نسبت به \lr{Global HE} کنتراست محلی تصاویر را بهبود می‌دهند.
+    \item روش \lr{Sliding Window} برای جزئیات محلی بهتر عمل می‌کند و حساسیت بالاتری به اندازه پنجره دارد.
+    \item روش \lr{Tiling} ساده‌تر و سریع‌تر است ولی ممکن است در تصاویر با تغییرات محلی زیاد جزئیات را کاهش دهد.
+    \item اندازه بلوک/پنجره تأثیر مستقیم بر \lr{Entropy} و \lr{PSNR} دارد و انتخاب مناسب بسته به نوع تصویر است.
+\end{enumerate}
+
+
+\end{document}
